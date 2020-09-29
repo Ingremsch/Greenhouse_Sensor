@@ -2,6 +2,7 @@ import time
 import board
 from busio import I2C
 import adafruit_bme680
+import csv
 
 # Create library object using our Bus I2C port
 i2c = I2C(board.SCL, board.SDA)
@@ -16,12 +17,26 @@ bme680.sea_level_pressure = 1013.25
 # separate temperature sensor to calibrate this one.
 temperature_offset = -5
 
-while True:
-    #print("\nTemperature: %0.1f C" % bme680.temperature + temperature_offset)
-    print("\nTemperature: %0.1f C" % bme680.temperature)
-    print("Gas: %d ohm" % bme680.gas)
-    print("Humidity: %0.1f %%" % bme680.humidity)
-    print("Pressure: %0.3f hPa" % bme680.pressure)
-    print("Altitude = %0.2f meters" % bme680.altitude)
+with open("data_today.txt") as data_file:
 
-    time.sleep(1)
+    while True:
+        #print("\nTemperature: %0.1f C" % bme680.temperature + temperature_offset)
+        print("\nTemperature: %0.1f C" % bme680.temperature)
+        print("Gas: %d ohm" % bme680.gas)
+        print("Humidity: %0.1f %%" % bme680.humidity)
+        print("Pressure: %0.3f hPa" % bme680.pressure)
+        print("Altitude = %0.2f meters" % bme680.altitude)
+        
+        temp = bme680.temperature
+        gas =  bme680.gas
+        humidity = bme680.humidity
+        pressure = bme680.pressure
+        hoehe = bme680.altitude
+        
+        data_writer = csv.writer(data_file, delimiter=";")
+        
+        data_writer.writerow([temp, gas, hummidity, pressure, hoehe])
+        
+        time.sleep(1)
+        
+       
